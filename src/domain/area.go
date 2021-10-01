@@ -15,12 +15,16 @@ type Area struct {
 
 // AreaService defines all services related to areas
 type AreaService interface {
-	Fetch(ctx context.Context, cursor string, num int64) ([]Area, string, error)
+	/*Fetch(ctx context.Context, cursor string, num int64) ([]Area, string, error)
 
+
+	
 	GetByID(ctx context.Context, id int64) (Area, error)
 	GetByGroundSurface(ctx context.Context, groundSurface string) ([]Area, error)
 	GetByBuildingType(ctx context.Context, buildingType string) ([]Area, error)
-	GetByPostalCode(ctx context.Context, postalCode string) ([]Area, error)
+	GetByPostalCode(ctx context.Context, postalCode string) ([]Area, error)*/
+	//GetAll() ([]Area, error)
+	GetAll() (string, error)
 }
 
 // AreaRepository defines all repositories related to areas

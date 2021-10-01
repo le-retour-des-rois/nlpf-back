@@ -16,5 +16,13 @@ docker-compose up -d
 
 - Afin de rentrer en mode interactif avec la DB, lancer la commande :
 ```sh
-mongo --host localhost:27018
+mongo --host mongodb://root:example@localhost:27018
+```
+
+- Commandes utiles de la CLI mongo :
+```bash
+show databases # Show all databases inside the motor
+use <db> # Connect to the specified <db>
+show collections # Show all collections inside the used <db>
+db.<collection>.find() # Find all elements inside the specified <collection>
 ```

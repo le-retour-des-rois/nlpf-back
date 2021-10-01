@@ -7,7 +7,8 @@
 
 ## Spécifique à MongoDB
 - Installation de mongoDB : https://dev.to/seanwelshbrown/installing-mongodb-on-windows-subsystem-for-linux-wsl-2-19m9
-- ODM pour MongoDB : https://github.com/Kamva/mgm 
+- ODM pour MongoDB : https://github.com/Kamva/mgm
+- Première interaction avec MongoDB : https://www.loginradius.com/blog/async/mongodb-as-datasource-in-golang/
 
 # Commandes utiles
 
