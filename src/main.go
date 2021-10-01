@@ -1,15 +1,20 @@
 package main
 
 import (
-	"encoding/json"
+	//"encoding/json"
+	"context"
 	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
 
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"	
+
 	// -- Import Packages ---
-	"github.com/le-retour-des-rois/nlpf-back/tree/mongo-docker/src/api/area"
+	// "github.com/le-retour-des-rois/nlpf-back/tree/mongo-docker/src/api/area"
+	"area"
 )
 
 func homePage(w http.ResponseWriter, r *http.Request) {
@@ -45,7 +50,7 @@ func main() {
 	mainRouter := mux.NewRouter().StrictSlash(true)
 
 	// --- AREAS --- //
-	areaRepository 	:= area.NewAreaRepository(db)
+	areaRepository 	:= area.NewAreaRepository(db, "books")
 	areaService 	:= area.NewAreaService(areaRepository)
 
 
