@@ -9,7 +9,7 @@ require (
 )
 
 replace (
-	transaction v1.0.0 => ./api/transactions
+	transaction v1.0.0 => ./api/transaction
 	domain v1.0.0 => ./domain
 )
 

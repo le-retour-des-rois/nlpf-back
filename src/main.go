@@ -9,68 +9,8 @@ import (
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-
 	// -- Import Packages ---
-	"transaction"
 )
-
-/*type Transaction struct {
-	date_mutation             string `bson: "date_mutation,omitempty"`             //1
-	nature_mutation           string `bson: "nature_mutation,omitempty"`           //3
-	valeur_fonciere           string `bson: "valeur_fonciere,omitempty"`           //4
-	code_postal               string `bson: "code_postal,omitempty"`               //9
-	nom_commune               string `bson: "nom_commune,omitempty"`               //11
-	code_departement          string `bson: "code_departement,omitempty"`          //12
-	type_local                string `bson: "type_local,omitempty"`                //30
-	nombre_pieces_principales string `bson: "nombre_pieces_principales,omitempty"` //32
-	surface_terrain           string `bson: "surface_terrain,omitempty"`           //37
-	longitude                 string `bson: "longitude,omitempty"`                 //38
-	latitude                  string `bson: "latitude,omitempty"`                  //39
-}*/
-
-/*func parser() {
-
-	db := connectDB()
-
-	// Open the file
-	csvfile, err := os.Open("../full.csv")
-	if err != nil {
-		log.Fatalln("Couldn't open the csv file", err)
-	}
-
-	// Parse the file
-	reader := csv.NewReader(csvfile)
-	//reader := csv.NewReader(bufio.NewReader(csvfile))
-
-	// Iterate through the records
-	for {
-		// Read each record from csv
-		record, err := reader.Read()
-		if err == io.EOF {
-			break
-		}
-		if err != nil {
-			log.Fatal(err)
-		}
-		newRecord := &Transaction{
-			date_mutation:             record[1],
-			nature_mutation:           record[3],
-			valeur_fonciere:           record[4],
-			code_postal:               record[9],
-			nom_commune:               record[11],
-			code_departement:          record[12],
-			type_local:                record[30],
-			nombre_pieces_principales: record[32],
-			surface_terrain:           record[37],
-			longitude:                 record[38],
-			latitude:                  record[39],
-		}
-		fmt.Printf("%+v\n", newRecord)
-		collection := db.Collection("Transaction")
-		collection.InsertOne(context.TODO(), newRecord)
-		//fmt.Printf("Insert of record : %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s\n", record[1], record[3], record[4], record[9], record[11], record[12], record[30], record[32], record[37], record[38], record[39])
-	}
-}*/
 
 func connectDB() (db *mongo.Database) {
 	// Set client options
@@ -103,13 +43,12 @@ func main() {
 	mainRouter := mux.NewRouter().StrictSlash(true)
 
 	// --- Transactions --- //
-	transactionRepository := transaction.NewTransactionRepository(db, "transactions")
-	transactionService := transaction.NewTransactionService(transactionRepository)
+	transactionRepository := transaction.newTransactionRepository(db, "transactions")
+	transactionService := transaction.newTransactionService(transactionRepository)
 
-	// --- Projects --- //
-	// projectRepository := project.NewRealEstateProjectRepository(db, "transactions")
-	// projectService := project.NewRealEstateProjectService(transactionRepository)
+	// --- RealEstate --- //
+	//projectRepository := domain.RealEstateProjectRepository(db, "project")
+	//projectService := domain.RealEstateProjectService(projectRepository)
 
 	mainRouter.HandleFunc("/areas", transactionService.GetAll).Methods("GET")
-	// log.Fatal(http.ListenAndServe(":8001", mainRouter))
 }
