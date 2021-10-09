@@ -2,14 +2,19 @@ module main.go
 
 go 1.17
 
-require go.mongodb.org/mongo-driver v1.7.2
+require (
+	transaction v1.0.0
+	github.com/gorilla/mux v1.8.0
+	go.mongodb.org/mongo-driver v1.7.2
+)
 
 replace (
-	area v1.0.0 => ./api/area
+	transaction v1.0.0 => ./api/transactions
 	domain v1.0.0 => ./domain
 )
 
 require (
+	domain v1.0.0 // indirect
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/klauspost/compress v1.9.5 // indirect

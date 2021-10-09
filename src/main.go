@@ -5,19 +5,16 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"net/http"
 
+	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
-	"encoding/csv"
-	"io"
-	"os"
 	// -- Import Packages ---
-	// "github.com/le-retour-des-rois/nlpf-back/tree/mongo-docker/src/api/area"
+	"transaction"
 )
 
-type Transaction struct {
+/*type Transaction struct {
 	date_mutation             string `bson: "date_mutation,omitempty"`             //1
 	nature_mutation           string `bson: "nature_mutation,omitempty"`           //3
 	valeur_fonciere           string `bson: "valeur_fonciere,omitempty"`           //4
@@ -29,35 +26,9 @@ type Transaction struct {
 	surface_terrain           string `bson: "surface_terrain,omitempty"`           //37
 	longitude                 string `bson: "longitude,omitempty"`                 //38
 	latitude                  string `bson: "latitude,omitempty"`                  //39
-}
+}*/
 
-func homePage(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Homepage Endpoint Hit")
-}
-
-func connectDB() (db *mongo.Database) {
-	// Set client options
-	clientOptions := options.Client().ApplyURI("mongodb://root:example@localhost:27018")
-
-	// Connect to MongoDB
-	client, err := mongo.Connect(context.TODO(), clientOptions)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Check the connection
-	err = client.Ping(context.TODO(), nil)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Println("Connected to MongoDB!")
-	return client.Database("testdb")
-}
-
-func parser() {
+/*func parser() {
 
 	db := connectDB()
 
@@ -81,7 +52,7 @@ func parser() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		newRecord := Transaction{
+		newRecord := &Transaction{
 			date_mutation:             record[1],
 			nature_mutation:           record[3],
 			valeur_fonciere:           record[4],
@@ -99,22 +70,46 @@ func parser() {
 		collection.InsertOne(context.TODO(), newRecord)
 		//fmt.Printf("Insert of record : %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s\n", record[1], record[3], record[4], record[9], record[11], record[12], record[30], record[32], record[37], record[38], record[39])
 	}
+}*/
+
+func connectDB() (db *mongo.Database) {
+	// Set client options
+	clientOptions := options.Client().ApplyURI("mongodb://root:example@localhost:27018")
+
+	// Connect to MongoDB
+	client, err := mongo.Connect(context.TODO(), clientOptions)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Check the connection
+	err = client.Ping(context.TODO(), nil)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("Connected to MongoDB!")
+	return client.Database("testdb")
 }
 
 func main() {
-	// db := connectDB()
+	db := connectDB()
 
-	parser()
+	//parser()
 
 	// --- Router Instanciation --- //
-	// mainRouter := mux.NewRouter().StrictSlash(true)
+	mainRouter := mux.NewRouter().StrictSlash(true)
 
-	// // --- AREAS --- //
-	// areaRepository := area.NewAreaRepository(db, "books")
-	// areaService := area.NewAreaService(areaRepository)
+	// --- Transactions --- //
+	transactionRepository := transaction.NewTransactionRepository(db, "transactions")
+	transactionService := transaction.NewTransactionService(transactionRepository)
 
-	// mainRouter.HandleFunc("/", homePage)
-	// mainRouter.HandleFunc("/areas", areaService.GetAll).Methods("GET")
-	//mainRouter.HandleFunc("/areas", postArticles).Methods("POST")
+	// --- Projects --- //
+	// projectRepository := project.NewRealEstateProjectRepository(db, "transactions")
+	// projectService := project.NewRealEstateProjectService(transactionRepository)
+
+	mainRouter.HandleFunc("/areas", transactionService.GetAll).Methods("GET")
 	// log.Fatal(http.ListenAndServe(":8001", mainRouter))
 }
