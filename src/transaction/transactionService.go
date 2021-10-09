@@ -3,19 +3,19 @@ package transaction
 import (
 	"net/http"
 
-	"domain"
+	domain "test/domain"
 )
 
 type TransactionService struct {
-	transactionRepository domain.transactionRepositoryDomain
+	TransactionRepository domain.TransactionRepositoryDomain
 }
 
-func NewTransactionService(ar domain.transactionRepositoryDomain) domain.transactionRepositoryDomain {
-	return &transactionService{
-		transactionRepository: ar,
+func NewTransactionService(ar domain.TransactionRepositoryDomain) domain.TransactionRepositoryDomain {
+	return &TransactionService{
+		TransactionRepository: ar,
 	}
 }
 
-func (as *transactionService) GetAll(w http.ResponseWriter, r *http.Request) {
-	//fmt.Fprintf(w, as.transactionRepository.GetAll())
+func (as *TransactionService) GetAll(w http.ResponseWriter, r *http.Request) {
+	//fmt.Fprintf(w, as.TransactionRepository.GetAll())
 }

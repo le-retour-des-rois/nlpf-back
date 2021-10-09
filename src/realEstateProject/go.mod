@@ -1,17 +1,8 @@
-module test/main
+module test/realEstate
 
 go 1.17
 
-require test/transaction v1.0.0-unpublished
-
-replace test/transaction v1.0.0-unpublished => ./transaction
-
-require test/realEstate v1.0.0-unpublished
-
-replace test/realEstate v1.0.0-unpublished => ./realEstateProject
-
 require (
-	github.com/gorilla/mux v1.8.0
 	go.mongodb.org/mongo-driver v1.7.3
 	test/domain v1.0.0-unpublished
 )
@@ -30,4 +21,4 @@ require (
 	golang.org/x/text v0.3.5 // indirect
 )
 
-replace test/domain v1.0.0-unpublished => ./domain
+replace test/domain v1.0.0-unpublished => ../domain

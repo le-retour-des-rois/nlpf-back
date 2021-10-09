@@ -1,15 +1,17 @@
-/*package realEstateProject
+package realEstateProject
 
 import (
 	"go.mongodb.org/mongo-driver/mongo"
+
+	domain "test/domain"
 )
 
-type Repository struct {
+type RealEstateProjectRepository struct {
 	collection *mongo.Collection
 }
 
-func NewRepository(db *mongo.Database, collectionName string) domain.RepositoryDomain {
-	return &Repository{
+func NewRealEstateProjectRepository(db *mongo.Database, collectionName string) domain.RealEstateProjectRepositoryDomain {
+	return &RealEstateProjectRepository{
 		collection: db.Collection(collectionName),
 	}
-}*/
+}

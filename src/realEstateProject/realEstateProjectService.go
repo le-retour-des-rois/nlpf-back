@@ -1,19 +1,21 @@
-/*package realEstateProject
+package realEstateProject
 
 import (
 	"net/http"
+
+	domain "test/domain"
 )
 
-type Service struct {
-	Repository domain.RepositoryDomain
+type RealEstateProjectService struct {
+	RealEstateProjectRepository domain.RealEstateProjectRepositoryDomain
 }
 
-func NewService(ar domain.RepositoryDomain) domain.RepositoryDomain {
-	return &Service{
-		Repository: ar,
+func NewRealEstateProjectService(ar domain.RealEstateProjectRepositoryDomain) domain.RealEstateProjectRepositoryDomain {
+	return &RealEstateProjectService{
+		RealEstateProjectRepository: ar,
 	}
 }
 
-func (as *Service) GetAll(w http.ResponseWriter, r *http.Request) {
-	//fmt.Fprintf(w, as.Repository.GetAll())
-}*/
+func (as *RealEstateProjectService) GetAll(w http.ResponseWriter, r *http.Request) {
+	//fmt.Fprintf(w, as.RealEstateProjectRepository.GetAll())
+}

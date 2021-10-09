@@ -10,6 +10,9 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	// -- Import Packages ---
+	domain "test/domain"
+	realEstate "test/realEstate"
+	transaction "test/transaction"
 )
 
 func connectDB() (db *mongo.Database) {
@@ -43,12 +46,12 @@ func main() {
 	mainRouter := mux.NewRouter().StrictSlash(true)
 
 	// --- Transactions --- //
-	transactionRepository := transaction.newTransactionRepository(db, "transactions")
-	transactionService := transaction.newTransactionService(transactionRepository)
+	transactionRepository := transaction.NewTransactionRepository(db, "transactions")
+	transactionService := transaction.NewTransactionService(transactionRepository)
 
 	// --- RealEstate --- //
-	//projectRepository := domain.RealEstateProjectRepository(db, "project")
-	//projectService := domain.RealEstateProjectService(projectRepository)
+	projectRepository := realEstate.NewRealEstateProjectRepository(db, "project")
+	projectService := realEstate.NewRealEstateProjectService(projectRepository)
 
-	mainRouter.HandleFunc("/areas", transactionService.GetAll).Methods("GET")
+	//mainRouter.HandleFunc("/areas", transactionService.GetAll).Methods("GET")
 }
