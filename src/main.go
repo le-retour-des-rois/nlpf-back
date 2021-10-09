@@ -94,7 +94,7 @@ func parser() {
 			longitude:                 record[38],
 			latitude:                  record[39],
 		}
-		//fmt.Printf("%+v\n", newRecord)
+		fmt.Printf("%+v\n", newRecord)
 		collection := db.Collection("Transaction")
 		collection.InsertOne(context.TODO(), newRecord)
 		//fmt.Printf("Insert of record : %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s\n", record[1], record[3], record[4], record[9], record[11], record[12], record[30], record[32], record[37], record[38], record[39])
