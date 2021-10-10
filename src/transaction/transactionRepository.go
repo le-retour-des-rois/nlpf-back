@@ -7,6 +7,7 @@ import (
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 
 	domain "test/domain"
 )
@@ -36,13 +37,19 @@ func NewTransactionRepository(db *mongo.Database, collectionName string) domain.
 }*/
 
 func (r *TransactionRepository) GetInfo(nom_commune string, type_local string, min_prix int64, max_prix int64) {
-	fmt.Println(nom_commune)
+	opts := options.Find()
+	opts.SetSort(bson.D{{"valeur_fonciere", -1}})
 	filterCursor, err := r.collection.Find(context.TODO(),
-		bson.M{
-			"nom_commune": nom_commune,
-			"type_local":  type_local,
-			//{ $and: [ {"valeur_fonciere": {$gt: min_prix} }, {"valeur_fonciere": {$lt: max_prix} }]}
-		})
+		bson.D{
+			{"nom_commune", nom_commune},
+			{"type_local", type_local},
+			{"valeur_fonciere", bson.D{
+					{"$gt", min_prix},
+				}},
+			{"valeur_fonciere", bson.D{
+					{"$lt", max_prix},
+				}},
+		}, opts)
 
 	if err != nil {
 		log.Fatal(err)
