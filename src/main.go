@@ -9,8 +9,9 @@ import (
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+
 	// -- Import Packages ---
-	domain "test/domain"
+
 	realEstate "test/realEstate"
 	transaction "test/transaction"
 )
