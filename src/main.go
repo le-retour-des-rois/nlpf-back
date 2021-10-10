@@ -5,19 +5,19 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"net/http"
 
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	// -- Import Packages ---
-	domain "test/domain"
 	realEstate "test/realEstate"
-	transaction "test/transaction"
 )
 
-func connectDB() (db *mongo.Database) {
+func connectToProject() (db *mongo.Database) {
 	// Set client options
-	clientOptions := options.Client().ApplyURI("mongodb://root:example@localhost:27018")
+	//clientOptions := options.Client().ApplyURI("mongodb://root:example@localhost:27018")
+	clientOptions := options.Client().ApplyURI("mongodb://127.0.0.1:27017")
 
 	// Connect to MongoDB
 	client, err := mongo.Connect(context.TODO(), clientOptions)
@@ -34,11 +34,16 @@ func connectDB() (db *mongo.Database) {
 	}
 
 	fmt.Println("Connected to MongoDB!")
-	return client.Database("testdb")
+	//return client.Database("testdb")
+	return client.Database("test")
+}
+
+func homePage(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Homepage Endpoint Hit")
 }
 
 func main() {
-	db := connectDB()
+	db := connectToProject()
 
 	//parser()
 
@@ -46,12 +51,15 @@ func main() {
 	mainRouter := mux.NewRouter().StrictSlash(true)
 
 	// --- Transactions --- //
-	transactionRepository := transaction.NewTransactionRepository(db, "transactions")
-	transactionService := transaction.NewTransactionService(transactionRepository)
+	//transactionRepository := transaction.NewTransactionRepository(db, "transactions")
+	//transactionService := transaction.NewTransactionService(transactionRepository)
 
 	// --- RealEstate --- //
-	projectRepository := realEstate.NewRealEstateProjectRepository(db, "project")
+	projectRepository := realEstate.NewRealEstateProjectRepository(db, "projectRE")
 	projectService := realEstate.NewRealEstateProjectService(projectRepository)
 
-	//mainRouter.HandleFunc("/areas", transactionService.GetAll).Methods("GET")
+	mainRouter.HandleFunc("/project", projectService.GetAll).Methods("GET")
+	mainRouter.HandleFunc("/project", projectService.AddProject).Methods("POST")
+	mainRouter.HandleFunc("/", homePage)
+	log.Fatal(http.ListenAndServe(":8081", mainRouter))
 }
