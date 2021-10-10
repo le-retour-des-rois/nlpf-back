@@ -23,11 +23,10 @@ func NewTransactionService(ar domain.TransactionRepositoryDomain) domain.Transac
 }*/
 
 type TransactionDTO struct {
-	//min_prix    int64
-	//max_prix    int64
+	Min_prix    int64
+	Max_prix    int64
 	Nom_commune string
-
-	//type_local  string
+	Type_local  string
 }
 
 func (as *TransactionService) GetInfo(w http.ResponseWriter, r *http.Request) {
@@ -44,5 +43,5 @@ func (as *TransactionService) GetInfo(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
-	as.TransactionRepository.GetInfo(TransactionRequest.Nom_commune)
+	as.TransactionRepository.GetInfo(TransactionRequest.Nom_commune, TransactionRequest.Type_local, TransactionRequest.Min_prix, TransactionRequest.Max_prix)
 }

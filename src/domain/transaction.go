@@ -17,5 +17,5 @@ type TransactionServiceDomain interface {
 
 type TransactionRepositoryDomain interface {
 	//GetAll() string
-	GetInfo(nom_commune string)
+	GetInfo(nom_commune string, type_local string, min_prix int64, max_prix int64)
 }

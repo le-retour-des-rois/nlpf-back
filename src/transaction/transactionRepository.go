@@ -35,12 +35,14 @@ func NewTransactionRepository(db *mongo.Database, collectionName string) domain.
 	return &result
 }*/
 
-func (r *TransactionRepository) GetInfo(nom_commune string) {
+func (r *TransactionRepository) GetInfo(nom_commune string, type_local string, min_prix int64, max_prix int64) {
 	fmt.Println(nom_commune)
-	filterCursor, err := r.collection.Find(context.TODO(), bson.M{"nom_commune": nom_commune})
-	//"type_local":  type_local,
-	//"min_prix":    bson.D{{"$gt", min_prix}},
-	//"max_prix":    bson.D{{"$lt", max_prix}}
+	filterCursor, err := r.collection.Find(context.TODO(),
+		bson.M{
+			"nom_commune": nom_commune,
+			"type_local":  type_local,
+			//{ $and: [ {"valeur_fonciere": {$gt: min_prix} }, {"valeur_fonciere": {$lt: max_prix} }]}
+		})
 
 	if err != nil {
 		log.Fatal(err)
