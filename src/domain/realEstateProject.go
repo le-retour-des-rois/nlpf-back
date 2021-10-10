@@ -29,7 +29,7 @@ type RealEstateProjectRepositoryDomain interface {
 	// Get one project in the DB (int64)
 	GetOne(id string) RealEstateProject
 	// Delete one project in the DB (int64)
-	DeleteProject(id int64)
+	DeleteProject(id string)
 	// Add one project in the DB (int64, int64, string, string)
 	AddProject(RealEstateProject)
 }

@@ -54,7 +54,6 @@ func (as *RealEstateProjectRepository) AddProject(project domain.RealEstateProje
 }
 
 func (as *RealEstateProjectRepository) GetOne(id string) domain.RealEstateProject {
-	//TODO
 	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		log.Println("Invalid id")
@@ -69,6 +68,16 @@ func (as *RealEstateProjectRepository) GetOne(id string) domain.RealEstateProjec
 	return project
 }
 
-func (as *RealEstateProjectRepository) DeleteProject(id int64) {
-	//TODO
+func (as *RealEstateProjectRepository) DeleteProject(id string) {
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		log.Println("Invalid id")
+	}
+	fmt.Println(objectId)
+
+	result, err := as.collection.DeleteOne(context.TODO(), bson.M{"_id": objectId})
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("DeleteOne removed %v document(s)\n", result.DeletedCount)
 }

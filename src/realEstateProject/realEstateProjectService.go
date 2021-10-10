@@ -42,15 +42,16 @@ func (as *RealEstateProjectService) GetAll(w http.ResponseWriter, r *http.Reques
 }
 
 func (as *RealEstateProjectService) GetOne(w http.ResponseWriter, r *http.Request) {
-	//TODO
 	var params = mux.Vars(r)
 	var temp = params["id"]
 	fmt.Println("id", temp)
-	//var id, _ = strconv.ParseInt(temp, len(temp), 64)
 	var project = as.RealEstateProjectRepository.GetOne(temp)
 	fmt.Fprintf(w, "%+v\n", project)
 }
 
 func (as *RealEstateProjectService) DeleteProject(w http.ResponseWriter, r *http.Request) {
-	//TODO
+	var params = mux.Vars(r)
+	var temp = params["id"]
+	fmt.Println("id", temp)
+	as.RealEstateProjectRepository.DeleteProject(temp)
 }
