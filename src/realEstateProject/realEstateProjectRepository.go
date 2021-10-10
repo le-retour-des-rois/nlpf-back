@@ -5,7 +5,9 @@ import (
 
 	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+
 	"log"
 
 	domain "test/domain"
@@ -35,7 +37,6 @@ func (as *RealEstateProjectRepository) GetAll() []domain.RealEstateProject {
 
 	for _, project := range res {
 		var structure domain.RealEstateProject
-		//bson.Unmarshal(project, &structure)
 		bsonBytes, _ := bson.Marshal(project)
 		bson.Unmarshal(bsonBytes, &structure)
 		temp = append(temp, structure)
@@ -50,4 +51,24 @@ func (as *RealEstateProjectRepository) AddProject(project domain.RealEstateProje
 	as.collection.InsertOne(context.TODO(), project)
 	//fmt.Println("res: ", *res)
 	//fmt.Println("err: ", err)
+}
+
+func (as *RealEstateProjectRepository) GetOne(id string) domain.RealEstateProject {
+	//TODO
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		log.Println("Invalid id")
+	}
+	fmt.Println(objectId)
+
+	result := as.collection.FindOne(context.TODO(), bson.M{"_id": objectId})
+	var project domain.RealEstateProject
+	result.Decode(&project)
+	// fmt.Println("project ", project)
+	// fmt.Println("result ", result)
+	return project
+}
+
+func (as *RealEstateProjectRepository) DeleteProject(id int64) {
+	//TODO
 }

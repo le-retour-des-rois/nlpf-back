@@ -60,6 +60,8 @@ func main() {
 
 	mainRouter.HandleFunc("/project", projectService.GetAll).Methods("GET")
 	mainRouter.HandleFunc("/project", projectService.AddProject).Methods("POST")
+	mainRouter.HandleFunc("/project/{id}", projectService.DeleteProject).Methods("DELETE")
+	mainRouter.HandleFunc("/project/{id}", projectService.GetOne).Methods("GET")
 	mainRouter.HandleFunc("/", homePage)
 	log.Fatal(http.ListenAndServe(":8081", mainRouter))
 }

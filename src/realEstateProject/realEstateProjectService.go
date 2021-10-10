@@ -3,6 +3,7 @@ package realEstateProject
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/gorilla/mux"
 	"net/http"
 	domain "test/domain"
 )
@@ -38,4 +39,18 @@ func (as *RealEstateProjectService) GetAll(w http.ResponseWriter, r *http.Reques
 		fmt.Fprintf(w, "%+v\n", project)
 		//fmt.Println(project)
 	}
+}
+
+func (as *RealEstateProjectService) GetOne(w http.ResponseWriter, r *http.Request) {
+	//TODO
+	var params = mux.Vars(r)
+	var temp = params["id"]
+	fmt.Println("id", temp)
+	//var id, _ = strconv.ParseInt(temp, len(temp), 64)
+	var project = as.RealEstateProjectRepository.GetOne(temp)
+	fmt.Fprintf(w, "%+v\n", project)
+}
+
+func (as *RealEstateProjectService) DeleteProject(w http.ResponseWriter, r *http.Request) {
+	//TODO
 }

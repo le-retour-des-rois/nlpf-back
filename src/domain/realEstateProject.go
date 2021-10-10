@@ -16,9 +16,9 @@ type RealEstateProjectServiceDomain interface {
 	// Get all projects in the DB
 	GetAll(http.ResponseWriter, *http.Request)
 	// Get one project in the DB (int64)
-	//GetAll() string
+	GetOne(http.ResponseWriter, *http.Request)
 	// Delete one project in the DB (int64)
-	//GetAll() string
+	DeleteProject(http.ResponseWriter, *http.Request)
 	// Add one project in the DB (int64, int64, string, string)
 	AddProject(http.ResponseWriter, *http.Request)
 }
@@ -27,9 +27,9 @@ type RealEstateProjectRepositoryDomain interface {
 	// Get all projects in the DB
 	GetAll() []RealEstateProject
 	// Get one project in the DB (int64)
-	//GetAll() string
+	GetOne(id string) RealEstateProject
 	// Delete one project in the DB (int64)
-	//GetAll() string
+	DeleteProject(id int64)
 	// Add one project in the DB (int64, int64, string, string)
 	AddProject(RealEstateProject)
 }
