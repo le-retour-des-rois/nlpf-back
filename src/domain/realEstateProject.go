@@ -5,6 +5,7 @@ import (
 	"net/http"
 )
 
+// Struct to put data or receive in the DB
 type RealEstateProject struct {
 	Id          primitive.ObjectID
 	Max_prix    int64
@@ -13,6 +14,7 @@ type RealEstateProject struct {
 	Type_local  string
 }
 
+// Struct to send to the front
 type RealEstateProjectBack struct {
 	Id          string
 	Max_prix    int64

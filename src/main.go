@@ -45,8 +45,6 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 func main() {
 	db := connectToProject()
 
-	//parser()
-
 	// --- Router Instanciation --- //
 	mainRouter := mux.NewRouter().StrictSlash(true)
 

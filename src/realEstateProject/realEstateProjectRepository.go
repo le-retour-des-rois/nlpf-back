@@ -24,11 +24,7 @@ func NewRealEstateProjectRepository(db *mongo.Database, collectionName string) d
 }
 
 func (as *RealEstateProjectRepository) AddProject(project domain.RealEstateProject) {
-	//fmt.Println(project)
-	//res, err := as.collection.InsertOne(context.TODO(), project)
 	as.collection.InsertOne(context.TODO(), project)
-	//fmt.Println("res: ", *res)
-	//fmt.Println("err: ", err)
 }
 
 func (as *RealEstateProjectRepository) GetAll() []domain.RealEstateProjectBack {
@@ -46,8 +42,10 @@ func (as *RealEstateProjectRepository) GetAll() []domain.RealEstateProjectBack {
 	for _, project := range res {
 		var structure domain.RealEstateProject
 		var structureFinal domain.RealEstateProjectBack
+		// Transform the project receive from the DB in the right struct
 		bsonBytes, _ := bson.Marshal(project)
 		bson.Unmarshal(bsonBytes, &structure)
+
 		var tempID = structure.Id.Hex()
 		structureFinal.Id = tempID
 		structureFinal.Max_prix = structure.Max_prix
@@ -56,7 +54,7 @@ func (as *RealEstateProjectRepository) GetAll() []domain.RealEstateProjectBack {
 		structureFinal.Type_local = structure.Type_local
 		temp = append(temp, structureFinal)
 	}
-	//fmt.Println(res)
+
 	return temp
 }
 
@@ -65,20 +63,18 @@ func (as *RealEstateProjectRepository) GetOne(id string) domain.RealEstateProjec
 	if err != nil {
 		log.Println("Invalid id")
 	}
-	//fmt.Println(objectId)
 
 	result := as.collection.FindOne(context.TODO(), bson.M{"id": objectId})
 	var project domain.RealEstateProject
 	var projectFinal domain.RealEstateProjectBack
 	result.Decode(&project)
+
 	var tempID = project.Id.Hex()
 	projectFinal.Id = tempID
 	projectFinal.Max_prix = project.Max_prix
 	projectFinal.Min_prix = project.Min_prix
 	projectFinal.Nom_commune = project.Nom_commune
 	projectFinal.Type_local = project.Type_local
-	// fmt.Println("project ", project)
-	// fmt.Println("result ", result)
 	return projectFinal
 }
 
