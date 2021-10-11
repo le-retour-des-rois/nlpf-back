@@ -24,6 +24,8 @@ func (as *RealEstateProjectService) AddProject(w http.ResponseWriter, r *http.Re
 	// w.Header().Set("Access-Control-Allow-Origin", r.Header.Get("Origin"))
 	// w.Header().Set("Content-Type", "application/json")
 	// Call ParseForm() to parse the raw query and update r.PostForm and r.Form.
+
+	// Versio which work for the web call
 	if err := r.ParseForm(); err != nil {
 		fmt.Fprintf(w, "ParseForm() err: %v", err)
 		return
@@ -35,12 +37,20 @@ func (as *RealEstateProjectService) AddProject(w http.ResponseWriter, r *http.Re
 	type_local := r.FormValue("Type_local")
 
 	var project domain.RealEstateProject
-	// err := json.NewDecoder(r.Body).Decode(&project)
 	project.Id = primitive.NewObjectID()
 	project.Nom_commune = nom_comm
 	project.Min_prix = min_prix
 	project.Max_prix = max_prix
 	project.Type_local = type_local
+
+	// Version which work locally with body in postman
+	// var project domain.RealEstateProject
+	// err := json.NewDecoder(r.Body).Decode(&project)
+	// project.Id = primitive.NewObjectID()
+
+	// if err != nil {
+	// 	http.Error(w, err.Error(), http.StatusBadRequest)
+	// }
 
 	as.RealEstateProjectRepository.AddProject(project)
 }
