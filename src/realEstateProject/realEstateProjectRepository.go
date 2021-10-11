@@ -89,7 +89,7 @@ func (as *RealEstateProjectRepository) DeleteProject(id string) {
 	}
 	fmt.Println(objectId)
 
-	result, err := as.collection.DeleteOne(context.TODO(), bson.M{"_id": objectId})
+	result, err := as.collection.DeleteOne(context.TODO(), bson.M{"id": objectId})
 	if err != nil {
 		log.Fatal(err)
 	}
