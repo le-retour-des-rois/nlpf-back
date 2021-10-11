@@ -4,8 +4,6 @@ go 1.17
 
 replace test/transaction v1.0.0-unpublished => ./transaction
 
-require test/realEstate v1.0.0-unpublished
-
 replace test/realEstate v1.0.0-unpublished => ./realEstateProject
 
 require (

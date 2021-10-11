@@ -5,17 +5,17 @@ import (
 )
 
 type Transaction struct {
-	id            int64  `json:"id"`
-	groundSurface int64  `json:"ground_surface" validate:"required"`
-	buildingType  string `json:"building_type"`
-	postalCode    string `json:"postal_code"`
-	mutationType  string `json:"mutation_type"`
+	//min_prix    int64
+	//max_prix    int64
+	nom_commune string
+	//type_local  string
 }
 
 type TransactionServiceDomain interface {
-	GetAll(http.ResponseWriter, *http.Request)
+	GetInfo(http.ResponseWriter, *http.Request)
 }
 
 type TransactionRepositoryDomain interface {
 	//GetAll() string
+	GetInfo(nom_commune string, type_local string, min_prix int64, max_prix int64)
 }
