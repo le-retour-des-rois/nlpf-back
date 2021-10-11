@@ -37,6 +37,11 @@ Refresh le `.mod` :
 go mod tidy  
 ```
 
+Import the csv inside the database:
+```bash
+mongoimport --type csv -d test-db -c products --headerline --drop full.csv
+```
+
 # Autres
 
 - Architecture de fichiers : https://github.com/bxcodec/go-clean-arch
