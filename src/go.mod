@@ -29,6 +29,8 @@ require (
 	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e // indirect
 	golang.org/x/text v0.3.6 // indirect
 	test/domain v1.0.0-unpublished // indirect
+	test/realEstate v1.0.0-unpublished // indirect
+	test/transaction v1.0.0-unpublished // indirect
 )
 
 replace test/domain v1.0.0-unpublished => ./domain

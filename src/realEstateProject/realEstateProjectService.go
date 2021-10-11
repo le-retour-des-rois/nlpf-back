@@ -28,26 +28,36 @@ func (as *RealEstateProjectService) AddProject(w http.ResponseWriter, r *http.Re
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+	w.Header().Set("Access-Control-Allow-Origin", r.Header.Get("Origin"))
+	w.Header().Set("Content-Type", "application/json")
 	as.RealEstateProjectRepository.AddProject(project)
 }
 
 func (as *RealEstateProjectService) GetAll(w http.ResponseWriter, r *http.Request) {
 	var arr = as.RealEstateProjectRepository.GetAll()
+	w.Header().Set("Access-Control-Allow-Origin", r.Header.Get("Origin"))
+	w.Header().Set("Content-Type", "application/json")
 	for _, project := range arr {
-		fmt.Fprintf(w, "%+v\n", project)
+		j, _ := json.Marshal(project)
+		fmt.Fprintf(w, "%+v\n", string(j))
 	}
 }
 
 func (as *RealEstateProjectService) GetOne(w http.ResponseWriter, r *http.Request) {
 	var params = mux.Vars(r)
 	var temp = params["id"]
+	w.Header().Set("Access-Control-Allow-Origin", r.Header.Get("Origin"))
+	w.Header().Set("Content-Type", "application/json")
 	var project = as.RealEstateProjectRepository.GetOne(temp)
-	fmt.Fprintf(w, "%+v\n", project)
+	j, _ := json.Marshal(project)
+	fmt.Fprintf(w, "%+v\n", string(j))
 }
 
 func (as *RealEstateProjectService) DeleteProject(w http.ResponseWriter, r *http.Request) {
 	var params = mux.Vars(r)
 	var temp = params["id"]
 	fmt.Println("id", temp)
+	w.Header().Set("Access-Control-Allow-Origin", r.Header.Get("Origin"))
+	w.Header().Set("Content-Type", "application/json")
 	as.RealEstateProjectRepository.DeleteProject(temp)
 }

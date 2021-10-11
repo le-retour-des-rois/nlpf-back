@@ -12,14 +12,13 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 
 	// -- Import Packages ---
-	transaction "test/transaction"
 	realEstate "test/realEstate"
+	transaction "test/transaction"
 )
 
 func connectToProject() (db *mongo.Database) {
 	// Set client options
 	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
-
 
 	// Connect to MongoDB
 	client, err := mongo.Connect(context.TODO(), clientOptions)
@@ -52,7 +51,7 @@ func main() {
 	// --- Transactions --- //
 	transactionRepository := transaction.NewTransactionRepository(db, "products")
 	transactionService := transaction.NewTransactionService(transactionRepository)
-	
+
 	// --- RealEstate --- //
 	projectRepository := realEstate.NewRealEstateProjectRepository(db, "projectRE")
 	projectService := realEstate.NewRealEstateProjectService(projectRepository)
@@ -61,7 +60,7 @@ func main() {
 	mainRouter.HandleFunc("/project", projectService.AddProject).Methods("POST")
 	mainRouter.HandleFunc("/project/{id}", projectService.DeleteProject).Methods("DELETE")
 	mainRouter.HandleFunc("/project/{id}", projectService.GetOne).Methods("GET")
-  mainRouter.HandleFunc("/transaction", transactionService.GetInfo).Methods("GET")
+	mainRouter.HandleFunc("/transaction", transactionService.GetInfo).Methods("GET")
 	mainRouter.HandleFunc("/", homePage)
 	log.Fatal(http.ListenAndServe(":8081", mainRouter))
 }
