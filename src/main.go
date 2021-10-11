@@ -12,13 +12,14 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 
 	// -- Import Packages ---
-
 	transaction "test/transaction"
+	realEstate "test/realEstate"
 )
 
-func connectDB() (db *mongo.Database) {
+func connectToProject() (db *mongo.Database) {
 	// Set client options
 	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
+
 
 	// Connect to MongoDB
 	client, err := mongo.Connect(context.TODO(), clientOptions)
@@ -38,14 +39,12 @@ func connectDB() (db *mongo.Database) {
 	return client.Database("test-db")
 }
 
-func HomePage(w http.ResponseWriter, r *http.Request) {
+func homePage(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Homepage Endpoint Hit")
 }
 
 func main() {
-	db := connectDB()
-
-	//parser()
+	db := connectToProject()
 
 	// --- Router Instanciation --- //
 	mainRouter := mux.NewRouter().StrictSlash(true)
@@ -53,14 +52,16 @@ func main() {
 	// --- Transactions --- //
 	transactionRepository := transaction.NewTransactionRepository(db, "products")
 	transactionService := transaction.NewTransactionService(transactionRepository)
-
+	
 	// --- RealEstate --- //
-	//projectRepository := realEstate.NewRealEstateProjectRepository(db, "project")
-	//projectService := realEstate.NewRealEstateProjectService(projectRepository)
+	projectRepository := realEstate.NewRealEstateProjectRepository(db, "projectRE")
+	projectService := realEstate.NewRealEstateProjectService(projectRepository)
 
-	mainRouter.HandleFunc("/", HomePage).Methods("GET")
-	mainRouter.HandleFunc("/transaction", transactionService.GetInfo).Methods("GET")
-
+	mainRouter.HandleFunc("/project", projectService.GetAll).Methods("GET")
+	mainRouter.HandleFunc("/project", projectService.AddProject).Methods("POST")
+	mainRouter.HandleFunc("/project/{id}", projectService.DeleteProject).Methods("DELETE")
+	mainRouter.HandleFunc("/project/{id}", projectService.GetOne).Methods("GET")
+  mainRouter.HandleFunc("/transaction", transactionService.GetInfo).Methods("GET")
+	mainRouter.HandleFunc("/", homePage)
 	log.Fatal(http.ListenAndServe(":8081", mainRouter))
-
 }
