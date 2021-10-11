@@ -37,10 +37,8 @@ func (as *RealEstateProjectService) GetAll(w http.ResponseWriter, r *http.Reques
 	var arr = as.RealEstateProjectRepository.GetAll()
 	w.Header().Set("Access-Control-Allow-Origin", r.Header.Get("Origin"))
 	w.Header().Set("Content-Type", "application/json")
-	for _, project := range arr {
-		j, _ := json.Marshal(project)
-		fmt.Fprintf(w, "%+v\n", string(j))
-	}
+	j, _ := json.Marshal(arr)
+	fmt.Fprintf(w, "%+v\n", string(j))
 }
 
 func (as *RealEstateProjectService) GetOne(w http.ResponseWriter, r *http.Request) {
