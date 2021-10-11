@@ -7,7 +7,6 @@ import (
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 
 	domain "test/domain"
 )
@@ -36,20 +35,17 @@ func NewTransactionRepository(db *mongo.Database, collectionName string) domain.
 	return &result
 }*/
 
-func (r *TransactionRepository) GetInfo(nom_commune string, type_local string, min_prix int64, max_prix int64) {
-	opts := options.Find()
-	opts.SetSort(bson.D{{"valeur_fonciere", -1}})
-	filterCursor, err := r.collection.Find(context.TODO(),
-		bson.D{
-			{"nom_commune", nom_commune},
-			{"type_local", type_local},
-			{"valeur_fonciere", bson.D{
-					{"$gt", min_prix},
-				}},
-			{"valeur_fonciere", bson.D{
-					{"$lt", max_prix},
-				}},
-		}, opts)
+func (r *TransactionRepository) GetInfo(nom_commune string, type_local string, min_prix int64, max_prix int64) []domain.Transaction {
+
+	var res []domain.Transaction
+
+	filterCursor, err := r.collection.Find(context.TODO(), bson.M{
+		"$and": []bson.M{
+			bson.M{"type_local": type_local},
+			bson.M{"nom_commune": nom_commune},
+			bson.M{"valeur_fonciere": bson.M{"$gte": min_prix}},
+			bson.M{"valeur_fonciere": bson.M{"$lte": max_prix}},
+		}})
 
 	if err != nil {
 		log.Fatal(err)
@@ -58,5 +54,16 @@ func (r *TransactionRepository) GetInfo(nom_commune string, type_local string, m
 	if err = filterCursor.All(context.TODO(), &transactionFiltered); err != nil {
 		log.Fatal(err)
 	}
+
+	for _, transaction := range transactionFiltered {
+		var structure domain.Transaction
+		//bson.Unmarshal(project, &structure)
+		bsonBytes, _ := bson.Marshal(transaction)
+		bson.Unmarshal(bsonBytes, &structure)
+		res = append(res, structure)
+	}
+
 	fmt.Println(transactionFiltered)
+
+	return res
 }

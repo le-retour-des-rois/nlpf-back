@@ -2,6 +2,7 @@ package transaction
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 
@@ -43,5 +44,5 @@ func (as *TransactionService) GetInfo(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
-	as.TransactionRepository.GetInfo(TransactionRequest.Nom_commune, TransactionRequest.Type_local, TransactionRequest.Min_prix, TransactionRequest.Max_prix)
+	fmt.Fprintf(w, "%+v", as.TransactionRepository.GetInfo(TransactionRequest.Nom_commune, TransactionRequest.Type_local, TransactionRequest.Min_prix, TransactionRequest.Max_prix))
 }
