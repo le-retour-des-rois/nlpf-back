@@ -6,7 +6,7 @@ import (
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"net/http"
-	"strconv"
+
 	domain "test/domain"
 )
 
@@ -21,38 +21,20 @@ func NewRealEstateProjectService(ar domain.RealEstateProjectRepositoryDomain) do
 }
 
 func (as *RealEstateProjectService) AddProject(w http.ResponseWriter, r *http.Request) {
-	// w.Header().Set("Access-Control-Allow-Origin", r.Header.Get("Origin"))
-	// w.Header().Set("Content-Type", "application/json")
-	// Call ParseForm() to parse the raw query and update r.PostForm and r.Form.
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "POST")
+	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Authorization")
 
-	// Versio which work for the web call
-	if err := r.ParseForm(); err != nil {
-		fmt.Fprintf(w, "ParseForm() err: %v", err)
-		return
+	if r.Method == http.MethodPost {
+		project := domain.RealEstateProject{}
+		err := json.NewDecoder(r.Body).Decode(&project)
+		project.Id = primitive.NewObjectID()
+		fmt.Println("response struct:", project)
+		if err != nil {
+			fmt.Println(err)
+		}
+		as.RealEstateProjectRepository.AddProject(project)
 	}
-	fmt.Fprintf(w, "Post from website! r.PostFrom = %v\n", r.PostForm)
-	nom_comm := r.FormValue("Nom_commune")
-	max_prix, _ := strconv.ParseInt(r.FormValue("Max_prix"), 0, 64)
-	min_prix, _ := strconv.ParseInt(r.FormValue("Min_prix"), 0, 64)
-	type_local := r.FormValue("Type_local")
-
-	var project domain.RealEstateProject
-	project.Id = primitive.NewObjectID()
-	project.Nom_commune = nom_comm
-	project.Min_prix = min_prix
-	project.Max_prix = max_prix
-	project.Type_local = type_local
-
-	// Version which work locally with body in postman
-	// var project domain.RealEstateProject
-	// err := json.NewDecoder(r.Body).Decode(&project)
-	// project.Id = primitive.NewObjectID()
-
-	// if err != nil {
-	// 	http.Error(w, err.Error(), http.StatusBadRequest)
-	// }
-
-	as.RealEstateProjectRepository.AddProject(project)
 }
 
 func (as *RealEstateProjectService) GetAll(w http.ResponseWriter, r *http.Request) {

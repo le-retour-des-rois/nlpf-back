@@ -57,7 +57,7 @@ func main() {
 	projectService := realEstate.NewRealEstateProjectService(projectRepository)
 
 	mainRouter.HandleFunc("/project", projectService.GetAll).Methods("GET")
-	mainRouter.HandleFunc("/project", projectService.AddProject).Methods("POST")
+	mainRouter.HandleFunc("/project", projectService.AddProject).Methods("POST", "OPTIONS")
 	mainRouter.HandleFunc("/project/{id}", projectService.DeleteProject).Methods("DELETE")
 	mainRouter.HandleFunc("/project/{id}", projectService.GetOne).Methods("GET")
 	mainRouter.HandleFunc("/transaction", transactionService.GetInfo).Methods("GET")
