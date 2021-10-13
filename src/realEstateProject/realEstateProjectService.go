@@ -3,9 +3,10 @@ package realEstateProject
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
+
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"net/http"
 
 	domain "test/domain"
 )
@@ -50,8 +51,8 @@ func (as *RealEstateProjectService) GetOne(w http.ResponseWriter, r *http.Reques
 	var temp = params["id"]
 	w.Header().Set("Access-Control-Allow-Origin", r.Header.Get("Origin"))
 	w.Header().Set("Content-Type", "application/json")
-	var project = as.RealEstateProjectRepository.GetOne(temp)
-	j, _ := json.Marshal(project)
+	var transactions = as.RealEstateProjectRepository.GetOne(temp)
+	j, _ := json.Marshal(transactions)
 	fmt.Fprintf(w, "%+v\n", string(j))
 }
 

@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"fmt"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -14,22 +15,24 @@ import (
 )
 
 type RealEstateProjectRepository struct {
-	collection *mongo.Collection
+	projectCollection     *mongo.Collection
+	transactionCollection *mongo.Collection
 }
 
-func NewRealEstateProjectRepository(db *mongo.Database, collectionName string) domain.RealEstateProjectRepositoryDomain {
+func NewRealEstateProjectRepository(db *mongo.Database, projectCollectionName string, transactionCollectionName string) domain.RealEstateProjectRepositoryDomain {
 	return &RealEstateProjectRepository{
-		collection: db.Collection(collectionName),
+		projectCollection:     db.Collection(projectCollectionName),
+		transactionCollection: db.Collection(transactionCollectionName),
 	}
 }
 
 func (as *RealEstateProjectRepository) AddProject(project domain.RealEstateProject) {
-	as.collection.InsertOne(context.TODO(), project)
+	as.projectCollection.InsertOne(context.TODO(), project)
 }
 
 func (as *RealEstateProjectRepository) GetAll() []domain.RealEstateProjectBack {
 	var temp []domain.RealEstateProjectBack
-	filterCursor, err := as.collection.Find(context.TODO(), bson.M{})
+	filterCursor, err := as.projectCollection.Find(context.TODO(), bson.M{})
 
 	if err != nil {
 		log.Fatal(err)
@@ -58,24 +61,47 @@ func (as *RealEstateProjectRepository) GetAll() []domain.RealEstateProjectBack {
 	return temp
 }
 
-func (as *RealEstateProjectRepository) GetOne(id string) domain.RealEstateProjectBack {
+func (as *RealEstateProjectRepository) GetOne(id string) []domain.Transaction {
 	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		log.Println("Invalid id")
 	}
 
-	result := as.collection.FindOne(context.TODO(), bson.M{"id": objectId})
+	result := as.projectCollection.FindOne(context.TODO(), bson.M{"id": objectId})
 	var project domain.RealEstateProject
-	var projectFinal domain.RealEstateProjectBack
 	result.Decode(&project)
 
-	var tempID = project.Id.Hex()
-	projectFinal.Id = tempID
-	projectFinal.Max_prix = project.Max_prix
-	projectFinal.Min_prix = project.Min_prix
-	projectFinal.Nom_commune = project.Nom_commune
-	projectFinal.Type_local = project.Type_local
-	return projectFinal
+	fmt.Println("toto: ", project)
+
+	var res []domain.Transaction
+
+	filterCursor, err := as.transactionCollection.Find(context.TODO(), bson.M{
+		"$and": []bson.M{
+			bson.M{"type_local": project.Type_local},
+			bson.M{"nom_commune": project.Nom_commune},
+			bson.M{"valeur_fonciere": bson.M{"$gte": project.Min_prix}},
+			bson.M{"valeur_fonciere": bson.M{"$lte": project.Max_prix}},
+		}})
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	var transactionFiltered []bson.M
+	if err = filterCursor.All(context.TODO(), &transactionFiltered); err != nil {
+		log.Fatal(err)
+	}
+
+	for _, transaction := range transactionFiltered {
+		var structure domain.Transaction
+		bsonBytes, _ := bson.Marshal(transaction)
+		bson.Unmarshal(bsonBytes, &structure)
+		res = append(res, structure)
+	}
+
+	fmt.Println("transactionFiltered ", transactionFiltered)
+	fmt.Println("res ", res)
+
+	return res
 }
 
 func (as *RealEstateProjectRepository) DeleteProject(id string) {
@@ -85,7 +111,7 @@ func (as *RealEstateProjectRepository) DeleteProject(id string) {
 	}
 	fmt.Println(objectId)
 
-	result, err := as.collection.DeleteOne(context.TODO(), bson.M{"id": objectId})
+	result, err := as.projectCollection.DeleteOne(context.TODO(), bson.M{"id": objectId})
 	if err != nil {
 		log.Fatal(err)
 	}

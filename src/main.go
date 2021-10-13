@@ -53,7 +53,7 @@ func main() {
 	transactionService := transaction.NewTransactionService(transactionRepository)
 
 	// --- RealEstate --- //
-	projectRepository := realEstate.NewRealEstateProjectRepository(db, "projectRE")
+	projectRepository := realEstate.NewRealEstateProjectRepository(db, "projectRE", "products")
 	projectService := realEstate.NewRealEstateProjectService(projectRepository)
 
 	mainRouter.HandleFunc("/project", projectService.GetAll).Methods("GET")
